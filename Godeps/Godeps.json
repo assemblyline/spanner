@@ -1,0 +1,74 @@
+{
+	"ImportPath": "github.com/assemblyline/spanner",
+	"GoVersion": "go1.5",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/Sirupsen/logrus",
+			"Comment": "v0.8.2-12-g2a0a9a1",
+			"Rev": "2a0a9a12ae2892ccfa9ab59c1222e9dcd29f9367"
+		},
+		{
+			"ImportPath": "github.com/docker/docker/pkg/archive",
+			"Comment": "v1.4.1-4238-gaa4f495",
+			"Rev": "aa4f495caee6ba66ce33a8ef4db0d4067c17195b"
+		},
+		{
+			"ImportPath": "github.com/docker/docker/pkg/fileutils",
+			"Comment": "v1.4.1-4238-gaa4f495",
+			"Rev": "aa4f495caee6ba66ce33a8ef4db0d4067c17195b"
+		},
+		{
+			"ImportPath": "github.com/docker/docker/pkg/ioutils",
+			"Comment": "v1.4.1-4238-gaa4f495",
+			"Rev": "aa4f495caee6ba66ce33a8ef4db0d4067c17195b"
+		},
+		{
+			"ImportPath": "github.com/docker/docker/pkg/pools",
+			"Comment": "v1.4.1-4238-gaa4f495",
+			"Rev": "aa4f495caee6ba66ce33a8ef4db0d4067c17195b"
+		},
+		{
+			"ImportPath": "github.com/docker/docker/pkg/promise",
+			"Comment": "v1.4.1-4238-gaa4f495",
+			"Rev": "aa4f495caee6ba66ce33a8ef4db0d4067c17195b"
+		},
+		{
+			"ImportPath": "github.com/docker/docker/pkg/system",
+			"Comment": "v1.4.1-4238-gaa4f495",
+			"Rev": "aa4f495caee6ba66ce33a8ef4db0d4067c17195b"
+		},
+		{
+			"ImportPath": "github.com/fsouza/go-dockerclient",
+			"Rev": "cc8cb2dcad73aa53c5f6b5b7927699e9941e6dbe"
+		},
+		{
+			"ImportPath": "github.com/jtolds/gls",
+			"Rev": "9a4a02dbe491bef4bab3c24fd9f3087d6c4c6690"
+		},
+		{
+			"ImportPath": "github.com/mgutz/ansi",
+			"Rev": "c286dcecd19ff979eeb73ea444e479b903f2cfcb"
+		},
+		{
+			"ImportPath": "github.com/naoina/go-stringutil",
+			"Rev": "360db0db4b01d34e12a2ec042c09e7d37fece761"
+		},
+		{
+			"ImportPath": "github.com/naoina/toml",
+			"Rev": "751171607256bb66e64c9f0220c00662420c38e9"
+		},
+		{
+			"ImportPath": "github.com/smartystreets/assertions",
+			"Comment": "1.5.0-403-g52d9726",
+			"Rev": "52d9726e53763b138bfe32bfa7d732bb2ad3f03e"
+		},
+		{
+			"ImportPath": "github.com/smartystreets/goconvey/convey",
+			"Comment": "1.5.0-437-ga29728e",
+			"Rev": "a29728e4d70bb23e436d03bee49b1793e70a9352"
+		}
+	]
+}
