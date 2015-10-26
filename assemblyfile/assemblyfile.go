@@ -2,27 +2,21 @@ package assemblyfile
 
 import (
 	"github.com/naoina/toml"
+	"io"
 	"io/ioutil"
-	"os"
 )
 
-func Read(path string) Config {
-	f, err := os.Open(path)
+func Read(assemblyfile io.Reader) (Config, error) {
+	buf, err := ioutil.ReadAll(assemblyfile)
 	if err != nil {
-		panic(err)
-	}
-	defer f.Close()
-
-	buf, err := ioutil.ReadAll(f)
-	if err != nil {
-		panic(err)
+		return Config{}, err
 	}
 
 	var config Config
 	if err := toml.Unmarshal(buf, &config); err != nil {
-		panic(err)
+		return Config{}, err
 	}
-	return config
+	return config, nil
 }
 
 type Config struct {

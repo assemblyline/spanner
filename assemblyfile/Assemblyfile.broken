@@ -1,0 +1,11 @@
+[application]
+name = 'Test App'
+repo = 'foo.example.com/assemblyline/test'
+extra = 'should not be here'
+
+[build]
+builder = 'ruby'
+version = 2
+
+[test]
+script = "bundle exec rake db:test:prepare"
