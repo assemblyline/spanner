@@ -3,6 +3,8 @@ package cache
 import (
 	"github.com/assemblyline/spanner/assemblyfile"
 	. "github.com/smartystreets/goconvey/convey"
+	"io/ioutil"
+	"os"
 	"testing"
 )
 
@@ -20,20 +22,74 @@ func config(appName string, appRepo string, builder string, builderVersion strin
 }
 
 func TestCache(t *testing.T) {
-	Convey("Cache key is based on the Assemblyfile and Dir", t, func() {
-		baseConfig := config("awesome app", "dockerhub.foo/bar/whathahver", "ruby", "2.3.3")
-		baseHash := New("/foo", baseConfig).Hash
+	Convey("With the FileStore Cache", t, func() {
 
-		So(baseHash, ShouldEqual, "5d773b69617d6214612fe76c2065f91124b9d43367b7fafc3984640c70dd4a0c")
+		cacheDir, _ := ioutil.TempDir("", "cache_test")
+		testDir, _ := ioutil.TempDir("", "test_dir")
+		data := []byte("hello cache")
+		ioutil.WriteFile(testDir+"/foo.txt", data, 0644)
+		ioutil.WriteFile(testDir+"/bar.txt", data, 0755)
 
-		Convey("The key is changed if the dir changes", func() {
-			So(New("/bar", baseConfig), ShouldNotEqual, baseHash)
+		cfg := config(
+			"Test App",
+			"foo.example.com/assemblyline/test",
+			"ruby",
+			"2.2.3",
+		)
+
+		fs := FileStore{dir: cacheDir}
+		c := New(testDir, cfg, fs)
+
+		Convey("Save and Restore with the FileStore Cache", func() {
+			c.Save()
+
+			// Simulate a fresh build with a clean checkout
+			os.RemoveAll(testDir)
+			c.Restore()
+
+			info, err := os.Stat(testDir + "/foo.txt")
+			So(err, ShouldBeNil)
+			So(info.Mode(), ShouldEqual, 0644)
+
+			readData, _ := ioutil.ReadFile(testDir + "/foo.txt")
+			So(string(readData), ShouldEqual, "hello cache")
+
+			info, err = os.Stat(testDir + "/bar.txt")
+			So(err, ShouldBeNil)
+			So(info.Mode(), ShouldEqual, 0755)
+
+			readData, _ = ioutil.ReadFile(testDir + "/bar.txt")
+			So(string(readData), ShouldEqual, "hello cache")
 		})
 
-		Convey("The key is changed if the application name changes", func() {
-			changedConfig := baseConfig
-			changedConfig.Application.Name = "super app"
-			So(New("/foo", baseConfig), ShouldNotEqual, baseHash)
+		Convey("Reading from the FileStore Cache when a save has not been made", func() {
+			c.Restore()
+
+			// It does not disturb whatever happens to be in the dir
+			info, err := os.Stat(testDir + "/foo.txt")
+			So(err, ShouldBeNil)
+			So(info.Mode(), ShouldEqual, 0644)
+
+			readData, _ := ioutil.ReadFile(testDir + "/foo.txt")
+			So(string(readData), ShouldEqual, "hello cache")
+
+			info, err = os.Stat(testDir + "/bar.txt")
+			So(err, ShouldBeNil)
+			So(info.Mode(), ShouldEqual, 0755)
+
+			readData, _ = ioutil.ReadFile(testDir + "/bar.txt")
+			So(string(readData), ShouldEqual, "hello cache")
+		})
+
+		Convey("Save errors will panic", func() {
+			fs := FileStore{dir: "/does/not/exist"}
+			c := New(testDir, cfg, fs)
+			So(c.Save, ShouldPanic)
+		})
+
+		Reset(func() {
+			os.RemoveAll(testDir)
+			os.RemoveAll(cacheDir)
 		})
 	})
 }
