@@ -8,9 +8,9 @@ import (
 	"testing"
 )
 
-type Unreadable struct{}
+type unreadable struct{}
 
-func (u Unreadable) Read(p []byte) (i int, err error) {
+func (u unreadable) Read(p []byte) (i int, err error) {
 	return 0, errors.New("could not read, because broken")
 }
 
@@ -42,7 +42,7 @@ func TestAssemblyfile(t *testing.T) {
 
 		Convey("Errors", func() {
 			Convey("io error", func() {
-				u := Unreadable{}
+				u := unreadable{}
 				_, err := af.Read(u)
 				So(err.Error(), ShouldEqual, "could not read, because broken")
 			})
