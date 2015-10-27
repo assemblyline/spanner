@@ -157,7 +157,7 @@ func (t *IdenticalToTest) Functions() {
 	err = m.Matches((func())(nil))
 	ExpectEq(nil, err)
 
-	err = m.Matches(func(){})
+	err = m.Matches(func() {})
 	ExpectThat(err, Error(Equals("which is not an identical reference")))
 
 	// Non-nil expected value

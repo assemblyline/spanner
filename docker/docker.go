@@ -27,8 +27,8 @@ func New() DockerClient {
 
 func (d DockerClient) SaveContainer(c assemblyfile.Config) string {
 	options := docker.CommitContainerOptions{
-		Container: d.ContainerId(),
-                Repository: c.Application.Repo,
+		Container:  d.ContainerId(),
+		Repository: c.Application.Repo,
 	}
 
 	image, err := d.Client.CommitContainer(options)

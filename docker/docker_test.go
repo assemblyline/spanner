@@ -24,11 +24,11 @@ func TestDocker(t *testing.T) {
 			cgroup := &bytes.Buffer{}
 			io.WriteString(cgroup, data)
 
-                        client := DockerClient{
-                          cgroup: cgroup,
-                        }
+			client := DockerClient{
+				cgroup: cgroup,
+			}
 
-                        So(client.ContainerId(), ShouldEqual, "ce18c255cbab70caec36a81f948fba7cca856f90ebc0e2664f590c89b0fbeff4")
+			So(client.ContainerId(), ShouldEqual, "ce18c255cbab70caec36a81f948fba7cca856f90ebc0e2664f590c89b0fbeff4")
 		})
 	})
 }

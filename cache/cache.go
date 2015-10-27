@@ -76,7 +76,7 @@ func (c Cache) Restore() {
 	cacheReader, err := c.CacheStore.ReadCloser(c.path())
 	if cacheReader != nil {
 		err = archive.Untar(cacheReader, c.Dir, &archive.TarOptions{})
-                c.log.Info("Restoring cache for", c.Dir, "from", path)
+		c.log.Info("Restoring cache for", c.Dir, "from", path)
 		if err != nil {
 			c.log.Error("Error restoring cache for", c.Dir, "from", path, err.Error())
 		}
