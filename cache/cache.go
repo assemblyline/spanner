@@ -3,6 +3,7 @@ package cache
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
 	"github.com/assemblyline/spanner/assemblyfile"
 	"github.com/assemblyline/spanner/logger"
 	"github.com/docker/docker/pkg/archive"
@@ -19,12 +20,23 @@ type FileStore struct {
 	dir string
 }
 
+func NewFileStore(dir string) FileStore {
+	return FileStore{
+		dir: dir,
+	}
+}
+
 func (f FileStore) WriteCloser(name string) (io.WriteCloser, error) {
 	return os.Create(f.dir + "/" + name)
 }
 
 func (f FileStore) ReadCloser(name string) (io.ReadCloser, error) {
-	return os.Open(f.dir + "/" + name)
+	path := f.dir + "/" + name
+	if _, err := os.Stat(path); err == nil {
+		return os.Open(path)
+	} else {
+		return nil, errors.New("Cache not found")
+	}
 }
 
 type Cache struct {
@@ -62,12 +74,14 @@ func (c Cache) Save() {
 func (c Cache) Restore() {
 	path := c.path()
 	cacheReader, err := c.CacheStore.ReadCloser(c.path())
-	err = archive.Untar(cacheReader, c.Dir, &archive.TarOptions{})
-
-	if err != nil {
-		c.log.Info("No Cache for", c.Dir, "to restore")
+	if cacheReader != nil {
+		err = archive.Untar(cacheReader, c.Dir, &archive.TarOptions{})
+                c.log.Info("Restoring cache for", c.Dir, "from", path)
+		if err != nil {
+			c.log.Error("Error restoring cache for", c.Dir, "from", path, err.Error())
+		}
 	} else {
-		c.log.Info("Cache for", c.Dir, "restored from", path)
+		c.log.Info("No Cache for", c.Dir, "to restore")
 	}
 }
 
