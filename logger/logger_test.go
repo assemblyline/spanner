@@ -11,8 +11,10 @@ import (
 func TestCache(t *testing.T) {
 	Convey("logging", t, func() {
 		out := &bytes.Buffer{}
+		err := &bytes.Buffer{}
 		log := Logger{
 			out: out,
+			err: err,
 		}
 
 		Convey("New sets up logger with standard out and err", func() {
@@ -30,6 +32,11 @@ func TestCache(t *testing.T) {
 		Convey("info", func() {
 			log.Info("foo", "bar", "baz")
 			So(out.String(), ShouldContainSubstring, ansi.Color("foo bar baz", "blue"))
+		})
+
+		Convey("error", func() {
+			log.Error("foo", "bar", "baz")
+			So(err.String(), ShouldContainSubstring, ansi.Color("foo bar baz", "red"))
 		})
 	})
 }

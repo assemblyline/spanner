@@ -10,6 +10,7 @@ import (
 
 var title = ansi.ColorFunc("black+b:yellow")
 var info = ansi.ColorFunc("blue")
+var errors = ansi.ColorFunc("red")
 
 type Logger struct {
 	out io.Writer
@@ -31,4 +32,8 @@ func (l Logger) Title(text ...string) {
 
 func (l Logger) Info(text ...string) {
 	fmt.Fprintln(l.out, info(strings.Join(text, " ")))
+}
+
+func (l Logger) Error(text ...string) {
+	fmt.Fprintln(l.err, errors(strings.Join(text, " ")))
 }
