@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestCache(t *testing.T) {
+func TestLogging(t *testing.T) {
 	Convey("logging", t, func() {
 		log := TestLogger()
 
