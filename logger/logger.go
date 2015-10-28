@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"strings"
+	"bytes"
 )
 
 var title = ansi.ColorFunc("black+b:yellow")
@@ -21,6 +22,13 @@ func New() Logger {
 	return Logger{
 		out: os.Stdout,
 		err: os.Stderr,
+	}
+}
+
+func TestLogger() Logger {
+	return Logger{
+		out: &bytes.Buffer{},
+		err: &bytes.Buffer{},
 	}
 }
 

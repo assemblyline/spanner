@@ -2,6 +2,7 @@ package cache
 
 import (
 	"github.com/assemblyline/spanner/assemblyfile"
+	"github.com/assemblyline/spanner/logger"
 	. "github.com/smartystreets/goconvey/convey"
 	"io/ioutil"
 	"os"
@@ -39,6 +40,7 @@ func TestCache(t *testing.T) {
 
 		fs := FileStore{dir: cacheDir}
 		c := New(testDir, cfg, fs)
+                c.log = logger.TestLogger()
 
 		Convey("Save and Restore with the FileStore Cache", func() {
 			c.Save()
