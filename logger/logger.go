@@ -1,12 +1,12 @@
 package logger
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/mgutz/ansi"
 	"io"
 	"os"
 	"strings"
-	"bytes"
 )
 
 var title = ansi.ColorFunc("black+b:yellow")
