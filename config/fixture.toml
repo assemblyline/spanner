@@ -1,0 +1,17 @@
+[builder]
+name = 'ruby'
+version = '2.2.3'
+
+[[step]]
+
+cache = 'vendor/bundle'
+
+required_files = [
+  'Gemfile',
+  'Gemfile.lock',
+]
+
+script = [
+  'bundle install -r3 -j4 --path vendor/bundle',
+  'bundle clean',
+]

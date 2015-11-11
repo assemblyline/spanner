@@ -30,7 +30,7 @@ version = '2.2.3'
 
 ```toml
 [builder]
-builder = 'ruby'
+name = 'ruby'
 version = '2.2.3'
 
 [[step]]
