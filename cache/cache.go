@@ -12,8 +12,8 @@ import (
 )
 
 type CacheStore interface {
-	WriteCloser(name string) (io.WriteCloser, error)
-	ReadCloser(name string) (io.ReadCloser, error)
+	Writer(name string) (io.WriteCloser, error)
+	Reader(name string) (io.ReadCloser, error)
 }
 
 type FileStore struct {
@@ -26,11 +26,11 @@ func NewFileStore(dir string) FileStore {
 	}
 }
 
-func (f FileStore) WriteCloser(name string) (io.WriteCloser, error) {
+func (f FileStore) Writer(name string) (io.WriteCloser, error) {
 	return os.Create(f.dir + "/" + name)
 }
 
-func (f FileStore) ReadCloser(name string) (io.ReadCloser, error) {
+func (f FileStore) Reader(name string) (io.ReadCloser, error) {
 	path := f.dir + "/" + name
 	if _, err := os.Stat(path); err == nil {
 		return os.Open(path)
@@ -61,7 +61,7 @@ func (c Cache) Save() {
 	tarball, err := archive.Tar(c.Dir, archive.Gzip)
 	checkerr(err)
 
-	cacheWriter, err := c.CacheStore.WriteCloser(c.path())
+	cacheWriter, err := c.CacheStore.Writer(c.path())
 	checkerr(err)
 
 	_, err = io.Copy(cacheWriter, tarball)
@@ -73,7 +73,7 @@ func (c Cache) Save() {
 
 func (c Cache) Restore() {
 	path := c.path()
-	cacheReader, err := c.CacheStore.ReadCloser(c.path())
+	cacheReader, err := c.CacheStore.Reader(c.path())
 	if cacheReader != nil {
 		err = archive.Untar(cacheReader, c.Dir, &archive.TarOptions{})
 		c.log.Info("Restoring cache for", c.Dir, "from", path)
