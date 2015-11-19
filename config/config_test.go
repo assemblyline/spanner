@@ -34,9 +34,9 @@ func TestConfig(t *testing.T) {
 		})
 
 		Convey("Reading Step Config", func() {
-			So(config.Step[0].Cache, ShouldEqual, "vendor/bundle")
-			So(config.Step[0].Script, ShouldResemble, []string{"bundle install -r3 -j4 --path vendor/bundle", "bundle clean"})
-			So(config.Step[0].RequiredFiles, ShouldResemble, []string{"Gemfile", "Gemfile.lock"})
+			So(config.Step[0].CacheDir, ShouldEqual, "vendor/bundle")
+			So(config.Step[0].Script[0], ShouldResemble, []string{"bundle", "install", "-r3", "-j4", "--path", "vendor/bundle"})
+			So(config.Step[0].Script[1], ShouldResemble, []string{"bundle", "clean"})
 		})
 	})
 

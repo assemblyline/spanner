@@ -10,6 +10,7 @@ import (
 )
 
 var title = ansi.ColorFunc("black+b:yellow")
+var stepTitle = ansi.ColorFunc("black+b:cyan")
 var info = ansi.ColorFunc("blue")
 var errors = ansi.ColorFunc("red")
 
@@ -32,6 +33,14 @@ func TestLogger() Logger {
 	}
 }
 
+func (l Logger) Out() io.Writer {
+	return l.out
+}
+
+func (l Logger) Err() io.Writer {
+	return l.err
+}
+
 func (l Logger) Title(text ...string) {
 	text = append([]string{"["}, text...)
 	text = append(text, "]")
@@ -44,4 +53,10 @@ func (l Logger) Info(text ...string) {
 
 func (l Logger) Error(text ...string) {
 	fmt.Fprintln(l.err, errors(strings.Join(text, " ")))
+}
+
+func (l Logger) StepTitle(text ...string) {
+	text = append([]string{"==>  "}, text...)
+	text = append(text, "  ")
+	fmt.Fprintln(l.out, "\n"+stepTitle(strings.Join(text, " ")))
 }

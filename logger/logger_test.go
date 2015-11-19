@@ -17,11 +17,18 @@ func TestLogging(t *testing.T) {
 
 			So(newLogger.out, ShouldEqual, os.Stdout)
 			So(newLogger.err, ShouldEqual, os.Stderr)
+			So(newLogger.Out(), ShouldEqual, os.Stdout)
+			So(newLogger.Err(), ShouldEqual, os.Stderr)
 		})
 
 		Convey("titles", func() {
 			log.Title("foo", "bar", "baz")
 			So(log.out.(*bytes.Buffer).String(), ShouldContainSubstring, ansi.Color("[ foo bar baz ]", "black+b:yellow"))
+		})
+
+		Convey("step titles", func() {
+			log.StepTitle("foo", "bar", "baz")
+			So(log.out.(*bytes.Buffer).String(), ShouldContainSubstring, ansi.Color("==>   foo bar baz   ", "black+b:cyan"))
 		})
 
 		Convey("info", func() {

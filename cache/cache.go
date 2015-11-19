@@ -41,63 +41,61 @@ func (f FileStore) Reader(name string) (io.ReadCloser, error) {
 
 type Cache struct {
 	CacheStore   CacheStore
-	Dir          string
-	Hash         string
 	Assemblyfile assemblyfile.Config
 	log          logger.Logger
 }
 
-func New(dir string, config assemblyfile.Config, store CacheStore) Cache {
+func New(assemblyfile assemblyfile.Config, store CacheStore) Cache {
 	return Cache{
 		CacheStore:   store,
-		Dir:          dir,
-		Hash:         hash(config),
-		Assemblyfile: config,
+		Assemblyfile: assemblyfile,
 		log:          logger.New(),
 	}
 }
 
-func (c Cache) Save() {
-	tarball, err := archive.Tar(c.Dir, archive.Gzip)
+func (c Cache) Save(dir string, task string) {
+	tarball, err := archive.Tar(dir, archive.Gzip)
 	checkerr(err)
 
-	cacheWriter, err := c.CacheStore.Writer(c.path())
+	cacheWriter, err := c.CacheStore.Writer(c.path(dir, task))
 	checkerr(err)
 
 	_, err = io.Copy(cacheWriter, tarball)
 	checkerr(err)
 
 	cacheWriter.Close()
-	c.log.Info("Cache for", c.Dir, "saved as", c.path())
+	c.log.Info("Cache for", dir, "saved as", c.path(dir, task))
 }
 
-func (c Cache) Restore() {
-	path := c.path()
-	cacheReader, err := c.CacheStore.Reader(c.path())
+func (c Cache) Restore(dir, task string) {
+	path := c.path(dir, task)
+	cacheReader, err := c.CacheStore.Reader(c.path(dir, task))
 	if cacheReader != nil {
-		err = archive.Untar(cacheReader, c.Dir, &archive.TarOptions{})
-		c.log.Info("Restoring cache for", c.Dir, "from", path)
+		err = archive.Untar(cacheReader, dir, &archive.TarOptions{})
+		c.log.Info("Restoring cache for", dir, "from", path)
 		if err != nil {
-			c.log.Error("Error restoring cache for", c.Dir, "from", path, err.Error())
+			c.log.Error("Error restoring cache for", dir, "from", path, err.Error())
 		}
 	} else {
-		c.log.Info("No Cache for", c.Dir, "to restore")
+		c.log.Info("No Cache for", dir, "to restore")
 	}
 }
 
-func hash(a assemblyfile.Config) string {
+func hash(a assemblyfile.Config, dir, task string) string {
 	hasher := sha256.New()
 
 	hasher.Write([]byte(a.Application.Name))
 	hasher.Write([]byte(a.Application.Repo))
 	hasher.Write([]byte(a.Build.Builder))
 	hasher.Write([]byte(a.Build.Version))
+	hasher.Write([]byte(dir))
+	hasher.Write([]byte(task))
 
 	return hex.EncodeToString(hasher.Sum(nil))
 }
 
-func (c Cache) path() string {
-	return hash(c.Assemblyfile) + ".tar.gz"
+func (c Cache) path(dir, task string) string {
+	return hash(c.Assemblyfile, dir, task) + ".tar.gz"
 }
 
 func checkerr(err error) {

@@ -1,17 +1,13 @@
 [builder]
 name = 'ruby'
 version = '2.2.3'
+task = 'prod'
 
 [[step]]
 
-cache = 'vendor/bundle'
-
-required_files = [
-  'Gemfile',
-  'Gemfile.lock',
-]
+cache_dir = 'vendor/bundle'
 
 script = [
-  'bundle install -r3 -j4 --path vendor/bundle',
-  'bundle clean',
+  ['bundle', 'install', '-r3', '-j4', '--path', 'vendor/bundle'],
+  ['bundle', 'clean'],
 ]

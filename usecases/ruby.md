@@ -19,7 +19,7 @@ version = '2.2.3'
 * Builder & Version is specified, but must be parsed earlier to choose the correct builder, we should validate it as the builder starts.
 
 * Default Behaviour
-  * Copy source from `/var/assemblyline/src/` to `/app/`
+  * Copy source from `/var/assemblyline/src/` to `/usr/local/app/`
   * Check on the Presence of Gemfile and Gemfile.lock
   * Restore any cached version of `vendor/bundler`
   * Run `bundle install` with `--path vendor/bundle`

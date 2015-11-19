@@ -38,16 +38,17 @@ func TestCache(t *testing.T) {
 			"2.2.3",
 		)
 
-		fs := FileStore{dir: cacheDir}
-		c := New(testDir, cfg, fs)
+		fs := NewFileStore(cacheDir)
+		c := New(cfg, fs)
 		c.log = logger.TestLogger()
+		task := "test"
 
 		Convey("Save and Restore with the FileStore Cache", func() {
-			c.Save()
+			c.Save(testDir, task)
 
 			// Simulate a fresh build with a clean checkout
 			os.RemoveAll(testDir)
-			c.Restore()
+			c.Restore(testDir, task)
 
 			info, err := os.Stat(testDir + "/foo.txt")
 			So(err, ShouldBeNil)
@@ -65,7 +66,7 @@ func TestCache(t *testing.T) {
 		})
 
 		Convey("Reading from the FileStore Cache when a save has not been made", func() {
-			c.Restore()
+			c.Restore(testDir, task)
 
 			// It does not disturb whatever happens to be in the dir
 			info, err := os.Stat(testDir + "/foo.txt")
@@ -85,8 +86,8 @@ func TestCache(t *testing.T) {
 
 		Convey("Save errors will panic", func() {
 			fs := FileStore{dir: "/does/not/exist"}
-			c := New(testDir, cfg, fs)
-			So(c.Save, ShouldPanic)
+			c := New(cfg, fs)
+			So(func() { c.Save(testDir, task) }, ShouldPanic)
 		})
 
 		Reset(func() {

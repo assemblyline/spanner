@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/assemblyline/spanner/step"
 	"github.com/naoina/toml"
 	"io"
 	"io/ioutil"
@@ -21,16 +22,11 @@ func Read(reader io.Reader) (Config, error) {
 
 type Config struct {
 	Builder Builder
-	Step    []Step
+	Step    []step.Step
 }
 
 type Builder struct {
 	Name    string
+	Task    string
 	Version string
-}
-
-type Step struct {
-	Cache         string
-	Script        []string
-	RequiredFiles []string
 }
