@@ -3,51 +3,27 @@ package cache
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"errors"
 	"github.com/assemblyline/spanner/assemblyfile"
 	"github.com/assemblyline/spanner/logger"
 	"github.com/docker/docker/pkg/archive"
 	"io"
-	"os"
 )
 
-type CacheStore interface {
+type Store interface {
 	Writer(name string) (io.WriteCloser, error)
 	Reader(name string) (io.ReadCloser, error)
 }
 
-type FileStore struct {
-	dir string
-}
-
-func NewFileStore(dir string) FileStore {
-	return FileStore{
-		dir: dir,
-	}
-}
-
-func (f FileStore) Writer(name string) (io.WriteCloser, error) {
-	return os.Create(f.dir + "/" + name)
-}
-
-func (f FileStore) Reader(name string) (io.ReadCloser, error) {
-	path := f.dir + "/" + name
-	if _, err := os.Stat(path); err == nil {
-		return os.Open(path)
-	} else {
-		return nil, errors.New("Cache not found")
-	}
-}
 
 type Cache struct {
-	CacheStore   CacheStore
+	Store   Store
 	Assemblyfile assemblyfile.Config
 	log          logger.Logger
 }
 
-func New(assemblyfile assemblyfile.Config, store CacheStore) Cache {
+func New(assemblyfile assemblyfile.Config, store Store) Cache {
 	return Cache{
-		CacheStore:   store,
+		Store:   store,
 		Assemblyfile: assemblyfile,
 		log:          logger.New(),
 	}
@@ -57,7 +33,7 @@ func (c Cache) Save(dir string, task string) {
 	tarball, err := archive.Tar(dir, archive.Gzip)
 	checkerr(err)
 
-	cacheWriter, err := c.CacheStore.Writer(c.path(dir, task))
+	cacheWriter, err := c.Store.Writer(c.path(dir, task))
 	checkerr(err)
 
 	_, err = io.Copy(cacheWriter, tarball)
@@ -69,7 +45,7 @@ func (c Cache) Save(dir string, task string) {
 
 func (c Cache) Restore(dir, task string) {
 	path := c.path(dir, task)
-	cacheReader, err := c.CacheStore.Reader(c.path(dir, task))
+	cacheReader, err := c.Store.Reader(c.path(dir, task))
 	if cacheReader != nil {
 		err = archive.Untar(cacheReader, dir, &archive.TarOptions{})
 		c.log.Info("Restoring cache for", dir, "from", path)
