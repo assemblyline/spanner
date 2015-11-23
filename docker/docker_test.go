@@ -24,7 +24,7 @@ func TestDocker(t *testing.T) {
 			cgroup := &bytes.Buffer{}
 			io.WriteString(cgroup, data)
 
-			client := DockerClient{
+			client := Client{
 				cgroup: cgroup,
 			}
 

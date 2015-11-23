@@ -9,23 +9,23 @@ import (
 	"strings"
 )
 
-type DockerClient struct {
+type Client struct {
 	cgroup io.Reader
 	Client *docker.Client
 }
 
-func New() DockerClient {
+func New() Client {
 	cgroup, err := os.Open("/proc/self/cgroup")
 	if err != nil {
 		panic(err)
 	}
-	return DockerClient{
+	return Client{
 		cgroup: cgroup,
 		Client: client(),
 	}
 }
 
-func (d DockerClient) SaveContainer(c assemblyfile.Config) string {
+func (d Client) SaveContainer(c assemblyfile.Config) string {
 	options := docker.CommitContainerOptions{
 		Container:  d.ContainerId(),
 		Repository: c.Application.Repo,
@@ -39,7 +39,7 @@ func (d DockerClient) SaveContainer(c assemblyfile.Config) string {
 	return image.ID
 }
 
-func (d DockerClient) ContainerId() string {
+func (d Client) ContainerId() string {
 	s, err := ioutil.ReadAll(d.cgroup)
 	if err != nil {
 		panic(err)
