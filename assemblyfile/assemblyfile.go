@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 )
 
+//Read and parse the Assemblyfile from an io.Reader
 func Read(assemblyfile io.Reader) (Config, error) {
 	buf, err := ioutil.ReadAll(assemblyfile)
 	if err != nil {
@@ -23,6 +24,10 @@ type Config struct {
 	Application Application
 	Build       Build
 	Test        Test
+}
+
+func (c Config) Hash()  []byte {
+	return []byte(c.Application.Name + c.Application.Repo + c.Build.Builder + c.Build.Version)
 }
 
 type Application struct {

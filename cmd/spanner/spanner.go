@@ -38,7 +38,7 @@ func main() {
 	af, err := assemblyfile.Read(assemblyFile)
 	check(err)
 
-	c := cache.New(af, fileStore)
+	c := cache.New(af.Hash(), fileStore)
 
 	l.Title("Building", af.Application.Name, "on", config.Builder.Name, config.Builder.Version)
 	for _, step := range config.Step {

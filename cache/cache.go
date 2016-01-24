@@ -3,7 +3,6 @@ package cache
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"github.com/assemblyline/spanner/assemblyfile"
 	"github.com/assemblyline/spanner/logger"
 	"github.com/docker/docker/pkg/archive"
 	"io"
@@ -17,15 +16,15 @@ type Store interface {
 
 type Cache struct {
 	Store   Store
-	Assemblyfile assemblyfile.Config
+        Hash []byte
 	log          logger.Logger
 }
 
-func New(assemblyfile assemblyfile.Config, store Store) Cache {
+func New(hash []byte, store Store) Cache {
 	return Cache{
 		Store:   store,
-		Assemblyfile: assemblyfile,
-		log:          logger.New(),
+                Hash:    hash,
+		log:     logger.New(),
 	}
 }
 
@@ -57,13 +56,10 @@ func (c Cache) Restore(dir, task string) {
 	}
 }
 
-func hash(a assemblyfile.Config, dir, task string) string {
+func (c Cache) hash(dir, task string) string {
 	hasher := sha256.New()
 
-	hasher.Write([]byte(a.Application.Name))
-	hasher.Write([]byte(a.Application.Repo))
-	hasher.Write([]byte(a.Build.Builder))
-	hasher.Write([]byte(a.Build.Version))
+	hasher.Write(c.Hash)
 	hasher.Write([]byte(dir))
 	hasher.Write([]byte(task))
 
@@ -71,7 +67,7 @@ func hash(a assemblyfile.Config, dir, task string) string {
 }
 
 func (c Cache) path(dir, task string) string {
-	return hash(c.Assemblyfile, dir, task) + ".tar.gz"
+  return c.hash(dir, task) + ".tar.gz"
 }
 
 func checkerr(err error) {

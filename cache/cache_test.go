@@ -39,7 +39,7 @@ func TestCache(t *testing.T) {
 		)
 
 		fs := NewFileStore(cacheDir)
-		c := New(cfg, fs)
+		c := New(cfg.Hash(), fs)
 		c.log = logger.TestLogger()
 		task := "test"
 
@@ -86,7 +86,7 @@ func TestCache(t *testing.T) {
 
 		Convey("Save errors will panic", func() {
 			fs := FileStore{dir: "/does/not/exist"}
-			c := New(cfg, fs)
+			c := New(cfg.Hash(), fs)
 			So(func() { c.Save(testDir, task) }, ShouldPanic)
 		})
 
