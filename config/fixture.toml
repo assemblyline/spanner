@@ -5,7 +5,7 @@ task = 'prod'
 
 [[step]]
 
-cache_dir = 'vendor/bundle'
+dir = 'vendor/bundle'
 
 script = [
   ['bundle', 'install', '-r3', '-j4', '--path', 'vendor/bundle'],
