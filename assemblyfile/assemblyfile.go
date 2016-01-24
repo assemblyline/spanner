@@ -26,7 +26,7 @@ type Config struct {
 	Test        Test
 }
 
-func (c Config) Hash()  []byte {
+func (c Config) Hash() []byte {
 	return []byte(c.Application.Name + c.Application.Repo + c.Build.Builder + c.Build.Version)
 }
 

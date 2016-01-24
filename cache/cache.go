@@ -13,18 +13,17 @@ type Store interface {
 	Reader(name string) (io.ReadCloser, error)
 }
 
-
 type Cache struct {
-	Store   Store
-        Hash []byte
-	log          logger.Logger
+	Store Store
+	Hash  []byte
+	log   logger.Logger
 }
 
 func New(hash []byte, store Store) Cache {
 	return Cache{
-		Store:   store,
-                Hash:    hash,
-		log:     logger.New(),
+		Store: store,
+		Hash:  hash,
+		log:   logger.New(),
 	}
 }
 
@@ -67,7 +66,7 @@ func (c Cache) hash(dir, task string) string {
 }
 
 func (c Cache) path(dir, task string) string {
-  return c.hash(dir, task) + ".tar.gz"
+	return c.hash(dir, task) + ".tar.gz"
 }
 
 func checkerr(err error) {

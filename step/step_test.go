@@ -1,16 +1,12 @@
-package step
+package step_test
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/assemblyline/spanner/step"
 	"testing"
+	//"io/ioutil"
 )
 
-func TestStep(t *testing.T) {
-	Convey("running steps", t, func() {
-		step := Step{
-			Script: [][]string{[]string{"echo", "hello"}},
-		}
-
-		step.Exec()
-	})
+func TestSimpleStepExec(t *testing.T) {
+	s := step.Step{Script: [][]string{[]string{"echo", "hello"}}}
+	s.Exec()
 }

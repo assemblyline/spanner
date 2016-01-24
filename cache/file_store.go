@@ -1,9 +1,9 @@
 package cache
 
 import (
-  "io"
-  "os"
-  "errors"
+	"errors"
+	"io"
+	"os"
 )
 
 // FileStore impliments the cache.Store interface and provides a way of storing
@@ -27,5 +27,5 @@ func (f FileStore) Reader(name string) (io.ReadCloser, error) {
 	if _, err := os.Stat(path); err == nil {
 		return os.Open(path)
 	}
-        return nil, errors.New("Cache not found")
+	return nil, errors.New("Cache not found")
 }

@@ -11,10 +11,10 @@ var log = logger.New()
 //Step represents a runnable script that updates the contents of a particular directory
 //Optionly caches that directory
 type Step struct {
-	Name     string
-	Dir string
-	Cache    cache.Cache
-	Script   [][]string
+	Name   string
+	Dir    string
+	Cache  cache.Cache
+	Script [][]string
 }
 
 //Exec runs the script in order to update the filesystem
