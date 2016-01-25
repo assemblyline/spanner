@@ -1,45 +1,61 @@
-package logger
+package logger_test
 
 import (
 	"bytes"
+	"github.com/assemblyline/spanner/logger"
 	"github.com/mgutz/ansi"
-	. "github.com/smartystreets/goconvey/convey"
 	"os"
 	"testing"
 )
 
-func TestLogging(t *testing.T) {
-	Convey("logging", t, func() {
-		log := TestLogger()
+func TestNewLogger(t *testing.T) {
+	newLogger := logger.New()
 
-		Convey("New sets up logger with standard out and err", func() {
-			newLogger := New()
+	if newLogger.Out() != os.Stdout {
+		t.Error("Expected logger output to be stdout")
+	}
 
-			So(newLogger.out, ShouldEqual, os.Stdout)
-			So(newLogger.err, ShouldEqual, os.Stderr)
-			So(newLogger.Out(), ShouldEqual, os.Stdout)
-			So(newLogger.Err(), ShouldEqual, os.Stderr)
-		})
+	if newLogger.Err() != os.Stderr {
+		t.Error("Expected logger err to be stderr")
+	}
+}
 
-		Convey("titles", func() {
-			log.Title("foo", "bar", "baz")
-			So(log.out.(*bytes.Buffer).String(), ShouldContainSubstring, ansi.Color("[ foo bar baz ]", "black+b:yellow"))
-		})
+func TestLoggingTitles(t *testing.T) {
+	log := logger.Test()
+	log.Title("foo", "bar", "baz")
+	actual := log.Out().(*bytes.Buffer).String()
+	expected := ansi.Color("[ foo bar baz ]", "black+b:yellow") + "\n"
+	if actual != expected {
+		t.Error("Expected", actual, "to be", expected)
+	}
+}
 
-		Convey("step titles", func() {
-			log.StepTitle("foo", "bar", "baz")
-			So(log.out.(*bytes.Buffer).String(), ShouldContainSubstring, ansi.Color("==>   foo bar baz   ", "black+b:cyan"))
-		})
+func TestLoggingStepTitles(t *testing.T) {
+	log := logger.Test()
+	log.StepTitle("foo", "bar", "baz")
+	actual := log.Out().(*bytes.Buffer).String()
+	expected := "\n" + ansi.Color("==>   foo bar baz   ", "black+b:cyan") + "\n"
+	if actual != expected {
+		t.Error("Expected", actual, "to be", expected)
+	}
+}
 
-		Convey("info", func() {
-			log.Info("foo", "bar", "baz")
-			So(log.out.(*bytes.Buffer).String(), ShouldContainSubstring, ansi.Color("foo bar baz", "blue"))
-		})
+func TestLoggingInfo(t *testing.T) {
+	log := logger.Test()
+	log.Info("foo", "bar", "baz")
+	actual := log.Out().(*bytes.Buffer).String()
+	expected := ansi.Color("foo bar baz", "blue") + "\n"
+	if actual != expected {
+		t.Error("Expected", actual, "to be", expected)
+	}
+}
 
-		Convey("error", func() {
-
-			log.Error("foo", "bar", "baz")
-			So(log.err.(*bytes.Buffer).String(), ShouldContainSubstring, ansi.Color("foo bar baz", "red"))
-		})
-	})
+func TestLoggingError(t *testing.T) {
+	log := logger.Test()
+	log.Error("foo", "bar", "baz")
+	actual := log.Err().(*bytes.Buffer).String()
+	expected := ansi.Color("foo bar baz", "red") + "\n"
+	if actual != expected {
+		t.Error("Expected", actual, "to be", expected)
+	}
 }

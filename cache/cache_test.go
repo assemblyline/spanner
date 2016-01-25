@@ -40,7 +40,7 @@ func TestCache(t *testing.T) {
 
 		fs := NewFileStore(cacheDir)
 		c := New(cfg.Hash(), fs)
-		c.log = logger.TestLogger()
+		c.log = logger.Test()
 		task := "test"
 
 		Convey("Save and Restore with the FileStore Cache", func() {

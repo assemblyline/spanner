@@ -26,7 +26,7 @@ func New() Logger {
 	}
 }
 
-func TestLogger() Logger {
+func Test() Logger {
 	return Logger{
 		out: &bytes.Buffer{},
 		err: &bytes.Buffer{},
