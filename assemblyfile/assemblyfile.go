@@ -12,9 +12,13 @@ func Read(assemblyfile io.Reader) (Config, error) {
 	if err != nil {
 		return Config{}, err
 	}
+	return Parse(buf)
+}
 
+//Parse the Assemblyfile from the raw bytes
+func Parse(rawConfig []byte) (Config, error) {
 	var config Config
-	if err := toml.Unmarshal(buf, &config); err != nil {
+	if err := toml.Unmarshal(rawConfig, &config); err != nil {
 		return Config{}, err
 	}
 	return config, nil
