@@ -1,0 +1,21 @@
+package: github.com/assemblyline/spanner
+import:
+- package: github.com/Sirupsen/logrus
+- package: github.com/docker/docker
+  subpackages:
+  - pkg/archive
+  - pkg/fileutils
+  - pkg/ioutils
+  - pkg/pools
+  - pkg/promise
+  - pkg/system
+- package: github.com/fsouza/go-dockerclient
+- package: github.com/jtolds/gls
+- package: github.com/mgutz/ansi
+- package: github.com/naoina/go-stringutil
+- package: github.com/naoina/toml
+- package: github.com/smartystreets/assertions
+- package: github.com/smartystreets/goconvey
+  subpackages:
+  - convey
+- package: github.com/docker/go-units

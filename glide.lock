@@ -1,0 +1,67 @@
+hash: 8fc12f61274cb0b49a1aa2688582ee6d894593ecab2e70ada7749ebd1a0a54b5
+updated: 2016-02-22T23:02:21.316478281Z
+imports:
+- name: github.com/docker/docker
+  version: 40397d8059594ac58250f66f93f4c28455433242
+  subpackages:
+  - pkg/archive
+  - pkg/fileutils
+  - pkg/ioutils
+  - pkg/pools
+  - pkg/promise
+  - pkg/system
+  - pkg/idtools
+- name: github.com/docker/go-units
+  version: 5d2041e26a699eaca682e2ea41c8f891e1060444
+- name: github.com/fsouza/go-dockerclient
+  version: d92e9b886690a7daa42daa3807d1829c6e6a9d0a
+  subpackages:
+  - external/github.com/docker/docker/opts
+  - external/github.com/docker/docker/pkg/archive
+  - external/github.com/docker/docker/pkg/fileutils
+  - external/github.com/docker/docker/pkg/homedir
+  - external/github.com/docker/docker/pkg/stdcopy
+  - external/github.com/hashicorp/go-cleanhttp
+  - external/github.com/Sirupsen/logrus
+  - external/github.com/docker/docker/pkg/idtools
+  - external/github.com/docker/docker/pkg/ioutils
+  - external/github.com/docker/docker/pkg/pools
+  - external/github.com/docker/docker/pkg/promise
+  - external/github.com/docker/docker/pkg/system
+  - external/github.com/opencontainers/runc/libcontainer/user
+  - external/golang.org/x/net/context
+- name: github.com/jtolds/gls
+  version: 8ddce2a84170772b95dd5d576c48d517b22cac63
+- name: github.com/mgutz/ansi
+  version: c286dcecd19ff979eeb73ea444e479b903f2cfcb
+- name: github.com/naoina/go-stringutil
+  version: 6b638e95a32d0c1131db0e7fe83775cbea4a0d0b
+- name: github.com/naoina/toml
+  version: 751171607256bb66e64c9f0220c00662420c38e9
+  subpackages:
+  - ast
+- name: github.com/Sirupsen/logrus
+  version: 57cce1ed6103dce7791881d3e69e55f90d986aa5
+- name: github.com/smartystreets/assertions
+  version: f7f8515867bb29af7a7978a93927c42b5685aa76
+  subpackages:
+  - internal/go-render/render
+  - internal/oglematchers
+- name: github.com/smartystreets/goconvey
+  version: bf58a9a1291224109919756b4dcc469c670cc7e4
+  subpackages:
+  - convey
+  - web/server/api
+  - web/server/contract
+  - web/server/executor
+  - web/server/messaging
+  - web/server/parser
+  - web/server/system
+  - web/server/watch
+  - convey/reporting
+  - convey/gotest
+- name: golang.org/x/net
+  version: b6d7b1396ec874c3b00f6c84cd4301a17c56c8ed
+  subpackages:
+  - context
+devImports: []
