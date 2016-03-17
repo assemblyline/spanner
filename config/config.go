@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 )
 
+//Read reads a spanner config from a reader, and returns the Config object
+//returns an error if the config could not be read, or if it is invalid
 func Read(reader io.Reader) (Config, error) {
 	buf, err := ioutil.ReadAll(reader)
 	if err != nil {
@@ -20,12 +22,14 @@ func Read(reader io.Reader) (Config, error) {
 	return config, nil
 }
 
+//Config represents a set of Configuration for a spanner
 type Config struct {
-	Builder Builder
+	Spanner Spanner
 	Step    []step.Step
 }
 
-type Builder struct {
+//Spanner represents some metadata about this spanner
+type Spanner struct {
 	Name    string
 	Task    string
 	Version string

@@ -1,4 +1,4 @@
-[builder]
+[spanner]
 name = 'ruby'
 version = '2.2.3'
 broken = 'yes'

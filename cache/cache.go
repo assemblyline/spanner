@@ -8,17 +8,20 @@ import (
 	"io"
 )
 
+//The Store interface allows storeage to be pluged in to back a Cache
 type Store interface {
 	Writer(name string) (io.WriteCloser, error)
 	Reader(name string) (io.ReadCloser, error)
 }
 
+//A Cache provides a mechinisim to store and restore expensive to generate files between build generations
 type Cache struct {
 	Store Store
 	Hash  []byte
 	log   logger.Logger
 }
 
+//New returns a new cache, for the resource identified by hash, backed by store.
 func New(hash []byte, store Store) Cache {
 	return Cache{
 		Store: store,
@@ -27,6 +30,7 @@ func New(hash []byte, store Store) Cache {
 	}
 }
 
+//Save persits the contents of dir to the cache, task identifies the task (external) that manages the files there
 func (c Cache) Save(dir string, task string) {
 	tarball, err := archive.Tar(dir, archive.Gzip)
 	checkerr(err)
@@ -41,6 +45,7 @@ func (c Cache) Save(dir string, task string) {
 	c.log.Info("Cache for", dir, "saved as", c.path(dir, task))
 }
 
+//Restore restores the contents of dir from the cache
 func (c Cache) Restore(dir, task string) {
 	path := c.path(dir, task)
 	cacheReader, err := c.Store.Reader(c.path(dir, task))

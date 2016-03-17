@@ -23,7 +23,7 @@ func check(err error) {
 }
 
 var l = logger.New()
-var fileStore = cache.NewFileStore("/var/assemblyline/cache/")
+var fileStore = cache.FileStore{Dir: "/var/assemblyline/cache/"}
 
 func main() {
 	defer handleFatal()
@@ -40,7 +40,7 @@ func main() {
 
 	c := cache.New(af.Hash(), fileStore)
 
-	l.Title("Building", af.Application.Name, "on", config.Builder.Name, config.Builder.Version)
+	l.Title("Building", af.Application.Name, "with", config.Spanner.Name, config.Spanner.Version, config.Spanner.Task)
 	for _, step := range config.Step {
 		step.Cache = c
 		err := step.Exec()

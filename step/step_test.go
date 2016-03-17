@@ -8,5 +8,8 @@ import (
 
 func TestSimpleStepExec(t *testing.T) {
 	s := step.Step{Script: [][]string{[]string{"echo", "hello"}}}
-	s.Exec()
+	err := s.Exec()
+	if err != nil {
+		t.Error(err.Error())
+	}
 }

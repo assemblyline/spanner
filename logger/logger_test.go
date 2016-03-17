@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"github.com/assemblyline/spanner/logger"
 	"github.com/mgutz/ansi"
+	"io"
 	"os"
 	"testing"
 )
@@ -23,38 +24,29 @@ func TestNewLogger(t *testing.T) {
 func TestLoggingTitles(t *testing.T) {
 	log := logger.Test()
 	log.Title("foo", "bar", "baz")
-	actual := log.Out().(*bytes.Buffer).String()
-	expected := ansi.Color("[ foo bar baz ]", "black+b:yellow") + "\n"
-	if actual != expected {
-		t.Error("Expected", actual, "to be", expected)
-	}
+	assetLogged(t, log.Out(), ansi.Color("[ foo bar baz ]", "black+b:yellow")+"\n")
 }
 
 func TestLoggingStepTitles(t *testing.T) {
 	log := logger.Test()
 	log.StepTitle("foo", "bar", "baz")
-	actual := log.Out().(*bytes.Buffer).String()
-	expected := "\n" + ansi.Color("==>   foo bar baz   ", "black+b:cyan") + "\n"
-	if actual != expected {
-		t.Error("Expected", actual, "to be", expected)
-	}
+	assetLogged(t, log.Out(), "\n"+ansi.Color("==>   foo bar baz   ", "black+b:cyan")+"\n")
 }
 
 func TestLoggingInfo(t *testing.T) {
 	log := logger.Test()
 	log.Info("foo", "bar", "baz")
-	actual := log.Out().(*bytes.Buffer).String()
-	expected := ansi.Color("foo bar baz", "blue") + "\n"
-	if actual != expected {
-		t.Error("Expected", actual, "to be", expected)
-	}
+	assetLogged(t, log.Out(), ansi.Color("foo bar baz", "blue")+"\n")
 }
 
 func TestLoggingError(t *testing.T) {
 	log := logger.Test()
 	log.Error("foo", "bar", "baz")
-	actual := log.Err().(*bytes.Buffer).String()
-	expected := ansi.Color("foo bar baz", "red") + "\n"
+	assetLogged(t, log.Err(), ansi.Color("foo bar baz", "red")+"\n")
+}
+
+func assetLogged(t *testing.T, l io.Writer, expected string) {
+	actual := l.(*bytes.Buffer).String()
 	if actual != expected {
 		t.Error("Expected", actual, "to be", expected)
 	}

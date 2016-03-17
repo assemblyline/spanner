@@ -25,12 +25,12 @@ func TestConfig(t *testing.T) {
 			panic(err)
 		}
 
-		Convey("Reading Builder Name Metadata", func() {
-			So(config.Builder.Name, ShouldEqual, "ruby")
+		Convey("Reading Spanner Name Metadata", func() {
+			So(config.Spanner.Name, ShouldEqual, "ruby")
 		})
 
-		Convey("Reading Builder Version Metadata", func() {
-			So(config.Builder.Version, ShouldEqual, "2.2.3")
+		Convey("Reading Spanner Version Metadata", func() {
+			So(config.Spanner.Version, ShouldEqual, "2.2.3")
 		})
 
 		Convey("Reading Step Config", func() {

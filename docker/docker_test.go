@@ -1,8 +1,8 @@
 package docker
 
 import (
-	"bytes"
 	"io"
+	"io/ioutil"
 	"testing"
 )
 
@@ -18,17 +18,24 @@ func TestDetectingDockerContainerIdDetection(t *testing.T) {
 		"2:cpu:/docker/ce18c255cbab70caec36a81f948fba7cca856f90ebc0e2664f590c89b0fbeff4\n" +
 		"1:cpuset:/docker/ce18c255cbab70caec36a81f948fba7cca856f90ebc0e2664f590c89b0fbeff4"
 
-	cgroup := &bytes.Buffer{}
-	io.WriteString(cgroup, data)
+	cgroup, err := ioutil.TempFile("", "cgroup")
+	if err != nil {
+		t.Error(err)
+	}
+	_, err = io.WriteString(cgroup, data)
+	if err != nil {
+		t.Error(err)
+	}
+	t.Log(cgroup.Name())
 
 	client := Client{
-		cgroup: cgroup,
+		cgroup: cgroup.Name(),
 	}
 
-	expectedId := "ce18c255cbab70caec36a81f948fba7cca856f90ebc0e2664f590c89b0fbeff4"
-	containerId := client.ContainerId()
+	expectedID := "ce18c255cbab70caec36a81f948fba7cca856f90ebc0e2664f590c89b0fbeff4"
+	containerID := client.ContainerID()
 
-	if containerId != expectedId {
-		t.Error("Expected ContainerId to be:", expectedId, "was:", containerId)
+	if containerID != expectedID {
+		t.Error("Expected ContainerId to be:", expectedID, "was:", containerID)
 	}
 }

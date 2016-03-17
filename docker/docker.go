@@ -3,31 +3,21 @@ package docker
 import (
 	"github.com/assemblyline/spanner/assemblyfile"
 	docker "github.com/fsouza/go-dockerclient"
-	"io"
 	"io/ioutil"
 	"os"
 	"strings"
 )
 
+//Client for interactions with the docker daemon
 type Client struct {
-	cgroup io.Reader
+	cgroup string
 	Client *docker.Client
 }
 
-func New() Client {
-	cgroup, err := os.Open("/proc/self/cgroup")
-	if err != nil {
-		panic(err)
-	}
-	return Client{
-		cgroup: cgroup,
-		Client: client(),
-	}
-}
-
+//SaveContainer commits the current container
 func (d Client) SaveContainer(c assemblyfile.Config) string {
 	options := docker.CommitContainerOptions{
-		Container:  d.ContainerId(),
+		Container:  d.ContainerID(),
 		Repository: c.Application.Repo,
 	}
 
@@ -39,13 +29,21 @@ func (d Client) SaveContainer(c assemblyfile.Config) string {
 	return image.ID
 }
 
-func (d Client) ContainerId() string {
-	s, err := ioutil.ReadAll(d.cgroup)
+//ContainerID returns the ID of the current container
+func (d Client) ContainerID() string {
+	if d.cgroup == "" {
+		d.cgroup = "/proc/self/cgroup"
+	}
+	cgroup, err := os.Open(d.cgroup)
 	if err != nil {
 		panic(err)
 	}
-	cgroup := strings.Split(string(s[:]), "\n")[0]
-	row := strings.Split(cgroup, "/")
+	s, err := ioutil.ReadAll(cgroup)
+	if err != nil {
+		panic(err)
+	}
+	cgroups := strings.Split(string(s[:]), "\n")[0]
+	row := strings.Split(cgroups, "/")
 	return row[len(row)-1]
 }
 
