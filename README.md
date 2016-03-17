@@ -4,6 +4,7 @@
 
 [![Build Status](https://travis-ci.org/assemblyline/spanner.svg?branch=master)](https://travis-ci.org/assemblyline/spanner)
 [![Build Status](https://semaphoreci.com/api/v1/projects/b139e399-0405-4f47-8f10-5b2c6ecee33a/600279/badge.svg)](https://semaphoreci.com/assemblyline/spanner)
+[![GoDoc](https://godoc.org/github.com/assemblyline/spanner?status.svg)](https://godoc.org/github.com/assemblyline/spanner)
 
 Spanner is a tool for bolting containers together.
 
